@@ -21,7 +21,7 @@ pipeline {
                     projectName: env.JOB_NAME,
                     selector: lastSuccessful(),
                     filter: 'java/target/java.war',
-                    target: 'C:\appache\apache-tomcat-9.0.115\webapps'
+                    target: 'C:/appache/apache-tomcat-9.0.115/webapps'
                 )
             }
         }
