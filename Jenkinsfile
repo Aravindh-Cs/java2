@@ -2,27 +2,20 @@ pipeline {
     agent any
 
     tools {
-        maven 'MAVEN'
         jdk 'JDK'
+        maven 'MAVEN'
     }
 
     stages {
-        stage('Build') {
+        stage('Build WAR') {
             steps {
-                dir('java') {
-                    bat 'mvn clean package'
-                }
+                bat 'mvn clean package'
             }
         }
 
         stage('Deploy to Tomcat') {
             steps {
-                copyArtifacts(
-                    projectName: env.JOB_NAME,
-                    selector: lastSuccessful(),
-                    filter: 'java/target/java.war',
-                    target: 'C:/appache/apache-tomcat-9.0.115/webapps'
-                )
+                bat 'copy /Y target\\java.war C:/apache/apache-tomcat-9.0.115/webapps'
             }
         }
     }
