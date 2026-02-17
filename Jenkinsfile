@@ -15,7 +15,7 @@ pipeline {
 
         stage('Deploy to Tomcat') {
             steps {
-                bat 'copy /Y target\\java.war C:/apache/apache-tomcat-9.0.115/webapps'
+                bat 'C:/apache/apache-tomcat-9.0.115/webapps'
             }
         }
     }
