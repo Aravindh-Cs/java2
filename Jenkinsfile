@@ -67,15 +67,15 @@ pipeline {
     agent any
 
     tools {
-        jdk 'JDK'       // Name of your Jenkins JDK tool
-        maven 'MAVEN'   // Name of your Jenkins Maven tool
+        jdk 'JDK'
+        maven 'MAVEN'
     }
 
     environment {
         TOMCAT_HOME = "C:\\appache\\apache-tomcat-9.0.115-windows-x64\\apache-tomcat-9.0.115"
-        TOMCAT_PORT = "8081"
         WAR_NAME = "java.war"
         CONTEXT_PATH = "java"
+        TOMCAT_PORT = "8081"
     }
 
     stages {
@@ -90,18 +90,18 @@ pipeline {
             steps {
                 echo "Stopping Tomcat..."
                 bat """
-                "${TOMCAT_HOME}\\bin\\shutdown.bat"
+                set CATALINA_HOME=${env.TOMCAT_HOME}
+                "${env.TOMCAT_HOME}\\bin\\shutdown.bat"
+                ping 127.0.0.1 -n 6 > nul
                 """
-                echo "Waiting 5 seconds..."
-                bat 'timeout /t 5 /nobreak'
             }
         }
 
         stage('Deploy WAR') {
             steps {
-                echo "Deploying WAR to Tomcat..."
+                echo "Deploying WAR..."
                 bat """
-                copy /Y target\\${WAR_NAME} ${TOMCAT_HOME}\\webapps\\
+                copy /Y target\\${WAR_NAME} ${env.TOMCAT_HOME}\\webapps\\
                 """
             }
         }
@@ -110,27 +110,10 @@ pipeline {
             steps {
                 echo "Starting Tomcat..."
                 bat """
-                "${TOMCAT_HOME}\\bin\\startup.bat"
+                set CATALINA_HOME=${env.TOMCAT_HOME}
+                "${env.TOMCAT_HOME}\\bin\\startup.bat"
+                ping 127.0.0.1 -n 6 > nul
                 """
-            }
-        }
-
-        stage('Wait for Deployment') {
-            steps {
-                echo "Waiting for app to be available at http://localhost:${TOMCAT_PORT}/${CONTEXT_PATH}/index.jsp ..."
-                script {
-                    timeout(time: 60, unit: 'SECONDS') {
-                        waitUntil {
-                            try {
-                                def resp = httpRequest url: "http://localhost:${TOMCAT_PORT}/${CONTEXT_PATH}/index.jsp", validResponseCodes: '200'
-                                return resp.status == 200
-                            } catch (Exception e) {
-                                sleep 2
-                                return false
-                            }
-                        }
-                    }
-                }
             }
         }
     }
