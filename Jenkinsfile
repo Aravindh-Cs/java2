@@ -146,7 +146,7 @@ pipeline {
 
     post {
         success {
-            echo "Deployment complete! Access your app at http://localhost:8080/java/index.jsp"
+            echo "Deployment complete! Access your app at http://localhost:8081/java/index.jsp"
         }
         failure {
             echo "Deployment failed! Check WAR name, paths, or Tomcat logs."
