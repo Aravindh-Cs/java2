@@ -17,7 +17,7 @@ pipeline {
             steps {
                 bat '''
                 echo Deploying WAR to Tomcat...
-                copy /Y target\\java.war C:\\appache\\apache-tomcat-9.0.115\\webapps\\
+               copy /Y target\\java.war C:\\appache\\apache-tomcat-9.0.115-windows-x64\\apache-tomcat-9.0.115\\webapps\\
                 '''
             }
         }
