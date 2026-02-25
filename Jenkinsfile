@@ -44,7 +44,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 echo "Checking out code..."
-                git 'https://your-repo-url.git'
+                git 'https://github.com/Aravindh-Cs/java2.git'
             }
         }
 
